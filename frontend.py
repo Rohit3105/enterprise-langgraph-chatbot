@@ -43,7 +43,14 @@ st.markdown("""
         /* ---------- Base cleanup ---------- */
         #MainMenu {visibility: hidden;}
         footer {visibility: hidden;}
-        header[data-testid="stHeader"] {visibility: hidden; height: 0;}
+        /* Keep the header element itself (it carries the sidebar toggle arrow
+           on mobile) but make it blend in instead of disappearing. */
+        header[data-testid="stHeader"] {
+            background: transparent;
+            box-shadow: none;
+            height: 2.75rem;
+        }
+        div[data-testid="stDecoration"] { display: none; }
 
         html, body, [class*="css"] {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
@@ -54,7 +61,7 @@ st.markdown("""
         }
 
         .block-container {
-            padding-top: 2rem;
+            padding-top: 1rem;
             max-width: 780px;
         }
 
@@ -248,6 +255,86 @@ st.markdown("""
             padding: 3px 9px;
             border-radius: 999px;
             margin-top: 6px;
+            max-width: 100%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        /* ───────────────────────────────────────────────────────────
+           MOBILE / NARROW SCREEN LAYOUT
+           Everything below only kicks in under 640px so desktop is
+           untouched.
+        ─────────────────────────────────────────────────────────── */
+        @media (max-width: 640px) {
+
+            .block-container {
+                padding: 3.2rem 0.85rem 6rem 0.85rem !important;
+            }
+
+            /* Header: let the pill drop under the title instead of
+               squeezing everything into one row */
+            .brand-header {
+                flex-wrap: wrap;
+                row-gap: 8px;
+                margin-bottom: 0;
+            }
+            .brand-mark {
+                width: 38px;
+                height: 38px;
+                border-radius: 10px;
+            }
+            .brand-mark svg {
+                width: 18px;
+                height: 18px;
+            }
+            .brand-title {
+                font-size: 1.15rem;
+            }
+            .brand-subtitle {
+                font-size: 0.6rem;
+                line-height: 1.4;
+                white-space: normal;
+            }
+            .status-pill {
+                margin-left: 0;
+                order: 3;
+                width: 100%;
+                justify-content: center;
+                margin-top: 4px;
+            }
+
+            hr {
+                margin: 1rem 0 1.1rem 0;
+            }
+
+            /* Chat messages: tighter padding, full width use */
+            div[data-testid="stChatMessage"] {
+                padding: 3px 6px;
+                margin-bottom: 9px;
+                border-radius: 14px;
+            }
+            .msg-role {
+                font-size: 0.62rem;
+            }
+
+            /* Chat input: sit flush with screen edges, no floating card look */
+            div[data-testid="stChatInput"] {
+                border-radius: 14px !important;
+            }
+            .stChatInput {
+                padding-bottom: 10px;
+            }
+
+            /* Sidebar: full-width comfortable padding when opened as a drawer */
+            section[data-testid="stSidebar"] .block-container {
+                padding: 1.5rem 1rem !important;
+            }
+
+            .model-badge {
+                width: 100%;
+                box-sizing: border-box;
+            }
         }
     </style>
 """, unsafe_allow_html=True)
@@ -349,7 +436,7 @@ if user_input := st.chat_input("Type your message here..."):
                     "allow_search": allow_search
                 }
 
-                response = requests.post("https://enterprise-langgraph-chatbot.onrender.com/chat", json=payload)
+                response = requests.post("http://127.0.0.1:8000/chat", json=payload)
 
                 if response.status_code != 200:
                     st.error(f"🚨 Backend Error: {response.json().get('detail', response.text)}")
