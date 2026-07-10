@@ -349,7 +349,7 @@ if user_input := st.chat_input("Type your message here..."):
                     "allow_search": allow_search
                 }
 
-                response = requests.post("http://127.0.0.1:8000/chat", json=payload)
+                response = requests.post("https://enterprise-langgraph-chatbot.onrender.com/chat", json=payload)
 
                 if response.status_code != 200:
                     st.error(f"🚨 Backend Error: {response.json().get('detail', response.text)}")
