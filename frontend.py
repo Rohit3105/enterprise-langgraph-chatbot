@@ -3,13 +3,13 @@ import requests
 
 # --- 1. PAGE CONFIGURATION ---
 st.set_page_config(
-    page_title="Enterprise AI", 
+    page_title="Rohit AI", 
     page_icon="✨", 
     layout="centered",
-    initial_sidebar_state="auto" # This makes it perfectly collapse on mobile phones!
+    initial_sidebar_state="auto" 
 )
 
-# --- 2. THEME-AWARE CUSTOM CSS ---
+# --- 2. THEME-AWARE CUSTOM CSS & STUNNING UI ---
 st.markdown("""
     <style>
         /* Hide Streamlit default marks */
@@ -23,26 +23,38 @@ st.markdown("""
         /* Modern styling for the sidebar */
         [data-testid="stSidebar"] {
             border-right: 1px solid rgba(128, 128, 128, 0.2);
+            background-color: var(--secondary-background-color);
+        }
+        
+        /* Gradient Text for the Title */
+        .gradient-text {
+            background: linear-gradient(45deg, #0072ff, #00c6ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 800;
         }
     </style>
 """, unsafe_allow_html=True)
 
 # --- 3. STUNNING, MOBILE-RESPONSIVE HEADER ---
-# Using flexbox and var(--text-color) ensures it looks perfect in both Light and Dark mode on any screen size.
 st.markdown("""
     <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 25px; padding-top: 10px;">
-        <img src="https://cdn-icons-png.flaticon.com/512/4712/4712027.png" width="55" style="flex-shrink: 0; filter: drop-shadow(0px 4px 6px rgba(0,0,0,0.1));">
+        <img src="https://cdn-icons-png.flaticon.com/512/4712/4712027.png" width="55" style="flex-shrink: 0; filter: drop-shadow(0px 4px 6px rgba(0,0,0,0.15));">
         <div>
-            <h1 style="margin: 0; font-size: 1.8rem; font-weight: 700; color: var(--text-color);">Nova AI Assistant</h1>
-            <p style="margin: 0; font-size: 0.95rem; color: var(--text-color); opacity: 0.7;">⚡ Fast, intelligent, and here to help.</p>
+            <h1 style="margin: 0; font-size: 1.9rem;" class="gradient-text">Rohit AI Assistant</h1>
+            <p style="margin: 0; font-size: 0.95rem; color: var(--text-color); opacity: 0.75;">⚡ Engineered for excellence, ready to help.</p>
         </div>
     </div>
 """, unsafe_allow_html=True)
 
 # --- 4. THE SIDEBAR (AUTO-COLLAPSES ON PHONE) ---
 with st.sidebar:
-    st.header("⚙️ Preferences")
-    st.markdown("Customize your AI experience.")
+    st.markdown("""
+        <div style="text-align: center; padding-bottom: 10px;">
+            <h2 style="margin-bottom: 0;">⚙️ Dashboard</h2>
+            <p style="color: gray; font-size: 0.85rem; margin-top: 2px;">Rohit AI Enterprise System</p>
+        </div>
+    """, unsafe_allow_html=True)
     
     st.divider()
     
@@ -53,7 +65,7 @@ with st.sidebar:
     with st.expander("🛠️ Advanced Settings"):
         system_prompt = st.text_area(
             "System Prompt", 
-            "You are Nova, a highly intelligent, friendly, and concise enterprise AI assistant."
+            "You are Rohit AI, a highly intelligent, friendly, and concise enterprise AI assistant created by Rohit."
         )
     
     st.divider()
@@ -63,13 +75,13 @@ with st.sidebar:
         st.session_state.messages = []
         st.rerun()
         
-    st.caption("v1.0.0 • Secure Enterprise Cloud")
+    st.caption("v1.1.0 • Secure Enterprise Cloud")
 
 # --- 5. INITIALIZE HUMAN-LIKE CHAT ---
 # Give the AI a friendly first message so the screen isn't empty!
 if "messages" not in st.session_state or len(st.session_state.messages) == 0:
     st.session_state.messages = [
-        {"role": "assistant", "content": "Hi there! 👋 I'm Nova. I can search the live web, write code, or just chat. How can I help you today?"}
+        {"role": "assistant", "content": "Hi there! 👋 I'm **Rohit AI**. I can search the live web, write code, or just chat. How can I help you today?"}
     ]
 
 # --- 6. DISPLAY CHAT MESSAGES ---
@@ -79,7 +91,7 @@ for msg in st.session_state.messages:
         st.markdown(msg["content"])
 
 # --- 7. CHAT LOGIC & BACKEND CONNECTION ---
-if user_input := st.chat_input("Ask me anything..."):
+if user_input := st.chat_input("Ask Rohit AI anything..."):
     # 1. Show user message
     st.session_state.messages.append({"role": "user", "content": user_input})
     with st.chat_message("user", avatar="👤"):
@@ -87,7 +99,7 @@ if user_input := st.chat_input("Ask me anything..."):
 
     # 2. Show assistant thinking & call backend
     with st.chat_message("assistant", avatar="🤖"):
-        with st.spinner("Thinking..."):
+        with st.spinner("Processing..."):
             try:
                 payload = {
                     "messages": [m["content"] for m in st.session_state.messages if m["role"] == "user"],
